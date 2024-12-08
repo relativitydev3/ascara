@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ascara - Panel de Mantenimiento</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">ASCARA</div>
+        <h1>Panel de Mantenimiento</h1>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <span>Cambiar tema</span>
+      </button>
+    </header>
+    
+    <form action="/run-command" method="post" class="command-grid">
+      <button type="submit" name="command" value="bios_serial">Obtener Serial de BIOS</button>
+      <button type="submit" name="command" value="csproduct_name">Obtener Nombre del Producto</button>
+      <button type="submit" name="command" value="chkdsk">Verificar Disco</button>
+      <button type="submit" name="command" value="cleanmgr">Liberar Espacio</button>
+      <button type="submit" name="command" value="defrag">Desfragmentar Disco</button>
+      <button type="submit" name="command" value="net_reset">Restablecer Red</button>
+      <button type="submit" name="command" value="sfc_scan">Verificar Sistema</button>
+      <button type="submit" name="command" value="cleanup">Limpiar Temporales</button>
+    </form>
+
+    <section class="results-section">
+      <h2>Resultados</h2>
+      <div>
+        <% commandResults.forEach((result, index) => { %>
+          <div class="result-item">
+            <strong>Resultado <%= index + 1 %></strong>
+            <pre><%= result %></pre>
+            <div class="result-actions">
+              <form action="/delete-result" method="get">
+                <button type="submit" name="index" value="<%= index %>" class="delete-button">
+                  Eliminar resultado
+                </button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+      <% if (commandResults.length > 0) { %>
+        <div class="download-results-container">
+          <form action="/download-results" method="get">
+            <button type="submit" class="download-button">
+              Descargar todos los resultados
+            </button>
+          </form>
+        </div>
+      <% } %>
+    </section>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      updateThemeButton(newTheme);
+    }
+
+    function updateThemeButton(theme) {
+      const button = document.querySelector('.theme-toggle');
+      const svg = button.querySelector('svg');
+      const span = button.querySelector('span');
+      
+      if (theme === 'dark') {
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+        span.textContent = 'Modo claro';
+      } else {
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+        span.textContent = 'Modo oscuro';
+      }
+    }
+
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeButton(savedTheme);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadSavedTheme);
+  </script>
+</body>
+</html>

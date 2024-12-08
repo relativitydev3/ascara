@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "pdfkit": "^0.15.1"
+  },
+  "name": "ascara",
+  "version": "1.0.0",
+  "description": "Este proyecto consiste en una aplicación web de mantenimiento preventivo de sistema para entornos Windows, donde los usuarios pueden ejecutar una serie de comandos de administración del sistema directamente desde su navegador.",
+  "main": "app.js",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
